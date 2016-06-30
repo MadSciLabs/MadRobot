@@ -1,0 +1,11 @@
+{
+  "name": "app",
+  "version": "1.0.2",
+  "description": "",
+  "main": "app.js",
+  "dependencies": {
+    "express": "^4.13.3",
+    "sockt.io": "^0.0.1",
+    "onoff": "^0.0.1"
+  }
+}

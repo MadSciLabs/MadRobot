@@ -1,7 +1,7 @@
-var app = require('http').createServer(handler)
-   , io = require('socket.io').listen(app)
-   , url= require('url')
-   , fs = require('fs')
+var app = require('http').createServer(handler),
+    io = require('socket.io').listen(app),
+    url= require('url'),
+    fs = require('fs')
 
 app.listen(5000);
 
@@ -24,6 +24,7 @@ function handler (req, res) {
                 res.writeHead(200,{'Content-Type': 'text/html'});
                 res.end(data);
             });
+
     // Managing the route for the javascript files
     } else if( /\.(js)$/.test(path) ) {
         index = fs.readFile(__dirname+'/public'+path, 
@@ -48,6 +49,10 @@ function handler (req, res) {
 io.sockets.on('connection', function (socket) {
 
   // If we recieved a command from a client to start watering lets do so
+  // socket.on('message', function(msg){
+  //   console.log('Got text: '+msg);
+  //   socket.send(msg);
+  // });
   socket.on('ping', function(data) {
       console.log("ping");
 

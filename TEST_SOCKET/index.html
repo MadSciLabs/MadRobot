@@ -1,0 +1,33 @@
+<!doctype html>
+<html>
+    <head>
+        <script src='/socket.io/socket.io.js'></script>
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+
+        <script>
+	$(document).ready(function() {
+
+            var socket = io();
+
+            socket.on('time', function(data) {
+		console.log("time");
+		console.log(data.time);
+            });
+            socket.on('error', console.error.bind(console));
+
+    		$("#hello").click(function(){
+        		socket.emit('messageIn', { data: 'data 2', id: '2' });
+    		}); 
+
+        });
+        </script>
+    </head>
+    <body>
+	  <button id="hello" type="button">
+	      Test
+	  </button>
+
+        <ul id='messages'></ul>
+    </body>
+</html>

@@ -2,8 +2,8 @@ var app = require('http').createServer(handler),
     io = require('socket.io').listen(app),
     url= require('url'),
     fs = require('fs')
+  
 
-app.listen(5000);
 
 // Http handler function
 function handler (req, res) {
@@ -45,20 +45,23 @@ function handler (req, res) {
 
 }
 
-// Web Socket Connection
-io.sockets.on('connection', function (socket) {
 
-  // If we recieved a command from a client to start watering lets do so
-  socket.on('ping', function(data) {
-      console.log("ping");
+// Send current time to all connected clients
+function sendTime() {
+    io.emit('time', { time: new Date().toJSON() });
+}
 
-      delay = data["duration"];
+// Send current time every 10 secs
+setInterval(sendTime, 10000);
 
-      // Set a timer for when we should stop watering
-      setTimeout(function(){
-          socket.emit("pong");
-      }, delay*1000);
+// Emit welcome message on connection
+io.on('connection', function(socket) {
 
-  });
-  
+  // Use socket to communicate with this particular client only, sending it it's own id
+  socket.on('messageIn', function() {
+	console.log('messageIn');
+	});
+
 });
+
+app.listen(5000);

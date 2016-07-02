@@ -49,10 +49,6 @@ function handler (req, res) {
 io.sockets.on('connection', function (socket) {
 
   // If we recieved a command from a client to start watering lets do so
-  // socket.on('message', function(msg){
-  //   console.log('Got text: '+msg);
-  //   socket.send(msg);
-  // });
   socket.on('ping', function(data) {
       console.log("ping");
 

@@ -73,8 +73,6 @@ function reportOnGamepad() {
     // Create object for gamepad data to JSON format
     var gamepadJSON = {};
 
-var testit = "hiys";
-gamepadJSON[testit] = 1;
 
     for(var i=0;i<gp.buttons.length;i++) {
         html+= "Button "+(i+1)+": ";

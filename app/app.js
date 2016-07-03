@@ -57,10 +57,15 @@ setInterval(sendTime, 10000);
 // Emit welcome message on connection
 io.on('connection', function(socket) {
 
-  // Use socket to communicate with this particular client only, sending it it's own id
-  socket.on('messageIn', function() {
-	console.log('messageIn');
-	});
+// Use socket to communicate with this particular client only, sending it it's own id
+socket.on('messageIn', function() {
+  console.log('messageIn');
+});
+
+socket.on('gamepad', function(data) {
+  console.log('gamepad');
+  console.log(data);
+});
 
 });
 

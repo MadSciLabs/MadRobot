@@ -1,9 +1,15 @@
+// Initialize sockets full scope
+var socket = io();
+
+// Initialize gamepad full scope
+var hasGP = false;
+var repGP;
+
+
 // On document load
 $(document).ready(function() {
 
     // Manage sockets
-    var socket = io();
-
     socket.on('time', function(data) {
         console.log("time");
         console.log(data.time);
@@ -17,9 +23,6 @@ $(document).ready(function() {
 
 
     // Manage gamepad
-    var hasGP = false;
-    var repGP;
-
     if(hasGamepad()) {
  
         var prompt = "Connect the gamepad and press any button.";
@@ -67,15 +70,34 @@ function reportOnGamepad() {
     var html = "";
         html += "id: "+gp.id+"<br/>";
 
+    // Create object for gamepad data to JSON format
+    var gamepadJSON = {};
+
+var testit = "hiys";
+gamepadJSON[testit] = 1;
+
     for(var i=0;i<gp.buttons.length;i++) {
         html+= "Button "+(i+1)+": ";
-        if(gp.buttons[i].pressed) html+= " pressed";
+        if(gp.buttons[i].pressed) {
+            html+= " pressed";
+            gamepadJSON["button" + (i+1)] = 1;
+        } else {
+            gamepadJSON["button" + (i+1)] = 0;
+        }
+
         html+= "<br/>";
     }
 
     for(var i=0;i<gp.axes.length; i+=2) {
         html+= "Stick "+(Math.ceil(i/2)+1)+": "+gp.axes[i]+","+gp.axes[i+1]+"<br/>";
+        gamepadJSON["stick" + (Math.ceil(i/2)+1)] = gp.axes[i] + "," + gp.axes[i+1];
     }
 
     $("#gamepadDisplayData").html(html);
+
+
+
+    // Send gamepad JSON socket data to server
+    socket.emit('gamepad', JSON.stringify(gamepadJSON));
+
 }

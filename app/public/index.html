@@ -5,6 +5,9 @@
 		<script src="https://cdn.socket.io/socket.io-1.4.5.js"></script>
 		<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 		<script src="/js/client.js"></script>
+		<script src="/js/jquery.knob.min.js"></script>
+
+		 <link rel="stylesheet" media="all" href="/css/styles.css" />
 
     </head>
 
@@ -19,7 +22,33 @@
 		</div>
 
         <div id="gamepadStart" style="padding: 10px 0 10px 10px;"></div>
-    	<div id="gamepadDisplayData" style="padding: 10px 0 10px 10px;"></div>
+    	<div id="gamepadDisplayData" style="padding: 10px 0 60px 10px;"></div>
+
+    	<div style="float:left;padding: 10px 50px 0 20px;">
+    		<input type="text" class="dial" value ="0">
+    	</div>
+    	<div style="float:left;padding: 10px 0 0 50px;">
+    		<input type="text" class="dial" value ="0">
+    	</div>
+
+		<div class="buttonHolder">
+		  <div class="buttonHolder-left">
+		    <a href="#" class="button X"></a>
+		  </div>
+		  <div class="buttonHolder-center">
+		    <div>
+		    <a href="#" class="button Y"></a>
+		    </div>
+		    <div class="center-padding">
+		    <a href="#" class="button A"></a>
+		    </div>
+		  </div>
+		  <div class="buttonHolder-right">
+		    <a href="#" class="button B"></a>
+		  </div>
+		</div>
+
+
 
     </body>
 </html>

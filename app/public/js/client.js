@@ -9,6 +9,19 @@ var repGP;
 // On document load
 $(document).ready(function() {
 
+    // Setup input controls in case there is no gamepad
+    $(".dial").knob({
+        "min" : 0,
+        "max" : 1023,
+        "width" : "150",
+        "cursor" : true,
+        "thickness" : .3,
+        "fgColor" : "#222222",
+        "skin" : "tron"
+    });
+
+
+
     // Manage sockets
     socket.on('time', function(data) {
         console.log("time");

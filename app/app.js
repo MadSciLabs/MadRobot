@@ -1,88 +1,62 @@
-var app = require('http').createServer(handler),
-    io = require('socket.io').listen(app),
-    url= require('url'),
-    fs = require('fs')
-  
+var express  = require('express');
+var app      = express();
+var server   = require('http').createServer(app);
+var io       = require('socket.io')(server);
+ 
+app.use(express.static(__dirname + '/public'));
 
 
-// Http handler function
-function handler (req, res) {
+/* SET ROUTES */
+// Home page
+app.get('/', function(req, res) {
+  //send the index.html in our public directory
+  res.sendfile('index.html');
+});
 
-    // Using URL to parse the requested URL
-    var path = url.parse(req.url).pathname;
-    var arrPath = path.split('/')
+// Alexa
+app.get('/alexa', function(req, res) {
 
-    // Managing the root route
-    if (path == '/') {
-        index = fs.readFile(__dirname+'/public/index.html', 
-            function(error,data) {
+  res.setHeader('Content-Type', 'application/json');
 
-                if (error) {
-                    res.writeHead(500);
-                    return res.end("Error: unable to load index.html");
-                }
+  // Now send to robot
+  res.end(JSON.stringify({status:"ok"}));
+});
+/* END SET ROUTES */
 
-                res.writeHead(200,{'Content-Type': 'text/html'});
-                res.end(data);
-            });
 
-    /***************
-    * Get response from Alexa
-    ***************/
-    } else if (arrPath[1] == 'alexa') {
 
-	console.log(arrPath[2]);
-        res.setHeader('Content-Type', 'application/json');
+// Start server
+server.listen(5000, function () {
+  console.log('Listening on port 5000...');
+});
 
-	#Now send to robot
 
-	res.end(JSON.stringify({status:"ok"}));
-
-    // Managing the route for the javascript files
-    } else if( /\.(js)$/.test(path) ) {
-        index = fs.readFile(__dirname+'/public'+path, 
-            function(error,data) {
-
-                if (error) {
-                    res.writeHead(500);
-                    return res.end("Error: unable to load " + path);
-                }
-
-                res.writeHead(200,{'Content-Type': 'text/plain'});
-                res.end(data);
-            });
-    } else {
-        res.writeHead(404);
-        res.end("Error: 404 - File not found.");
-    }
-
-}
 
 
 // Send current time to all connected clients
 function sendTime() {
-    console.log("send time")
-    io.emit('time', { time: new Date().toJSON() });
+  console.log("send time")
+  io.emit('time', { time: new Date().toJSON() });
 }
 
 // Send current time every 10 secs
-setInterval(sendTime, 1000);
+setInterval(sendTime, 10000);
 
 // Emit welcome message on connection
 io.on('connection', function(socket) {
 
-console.log("connection");
 
-// Use socket to communicate with this particular client only, sending it it's own id
-socket.on('messageIn', function() {
-  console.log('messageIn');
+  console.log("connection");
+
+  // Use socket to communicate with this particular client only, sending it it's own id
+  socket.on('messageIn', function() {
+    console.log('messageIn');
+  });
+
+
+    socket.on('gamepad', function(data) {
+      console.log('gamepad');
+      console.log(data);
+    });
+
 });
-
-socket.on('gamepad', function(data) {
-  console.log('gamepad');
-  console.log(data);
-});
-
-});
-
-app.listen(5000);

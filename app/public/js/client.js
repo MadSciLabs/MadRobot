@@ -2,11 +2,12 @@
 var socket = io();
 
 // Initialize gamepad full scope
+var gamepadJSON = {};
 var hasGP = false;
 var repGP;
 
 // Initialize browser controllers
-var browserStickJSON = {"stick1" : 0, "stick2" : 0};
+var browserStickJSON = {};
 var repBC;
 
 
@@ -28,7 +29,7 @@ $(document).ready(function() {
 
         // Create object for keyboard data to JSON format
         var browserButtonJSON = {};
-        browserButtonJSON[this.id] = 1;
+        browserButtonJSON[this.id] = true;
 
         // Send gamepad JSON socket data to server
         socket.emit('gamepad', JSON.stringify(browserButtonJSON));
@@ -95,27 +96,43 @@ function hasGamepad() {
 // Return gamepad data
 function reportOnGamepad() {
 
+    var anyValuesChanged = false;
     var gp = navigator.getGamepads()[0];
     var html = "";
         html += "id: "+gp.id+"<br/>";
 
     // Create object for gamepad data to JSON format
-    var gamepadJSON = {};
+    // gamepadJSON = {};
 
-
+    // Check buttons
     for(var i=0;i<gp.buttons.length;i++) {
+
+        // Check to see if any values have changed - if so set anyValuesChanged to true
+        if (gamepadJSON["button" + (i+1)] != gp.buttons[i].pressed) {
+            anyValuesChanged = true;
+        }
+
         html+= "Button "+(i+1)+": ";
         if(gp.buttons[i].pressed) {
             html+= " pressed";
-            gamepadJSON["button" + (i+1)] = 1;
+            gamepadJSON["button" + (i+1)] = true;
         } else {
-            gamepadJSON["button" + (i+1)] = 0;
+            gamepadJSON["button" + (i+1)] = false;
         }
 
-        html+= "<br/>";
+        html+= "<br/>"; 
+
+
     }
 
+    // Check sticks
     for(var i=0;i<gp.axes.length; i+=2) {
+
+        // Check to see if any values have changed - if so set anyValuesChanged to true
+        if (gamepadJSON["stick" + (Math.ceil(i/2)+1)] != (gp.axes[i] + "," + gp.axes[i+1])) {
+            anyValuesChanged = true;
+        }
+
         html+= "Stick "+(Math.ceil(i/2)+1)+": "+gp.axes[i]+","+gp.axes[i+1]+"<br/>";
         gamepadJSON["stick" + (Math.ceil(i/2)+1)] = gp.axes[i] + "," + gp.axes[i+1];
     }
@@ -124,15 +141,17 @@ function reportOnGamepad() {
 
 
 
-    // Send gamepad JSON socket data to server
-    socket.emit('gamepad', JSON.stringify(gamepadJSON));
+    // Send gamepad JSON socket data to server if anyValuesChanged = true
+    if (anyValuesChanged) {
+        socket.emit('gamepad', JSON.stringify(gamepadJSON));
+    }
 
 }
 
 // Return browser controller data
 function reportOnBrowserControls() {
 
-    // Check to see if any values have changed
+    // Check to see if any values have changed - if not don't send JSON
     if ($('#stick1').val() != browserStickJSON.stick1 || $('#stick2').val() != browserStickJSON.stick2){
         
         // Create object for keyboard data to JSON format

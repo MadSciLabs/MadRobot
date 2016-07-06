@@ -101,8 +101,6 @@ function reportOnGamepad() {
     var html = "";
         html += "id: "+gp.id+"<br/>";
 
-    // Create object for gamepad data to JSON format
-    // gamepadJSON = {};
 
     // Check buttons
     for(var i=0;i<gp.buttons.length;i++) {

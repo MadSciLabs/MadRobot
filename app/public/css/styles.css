@@ -106,8 +106,6 @@ html, body{
 	text-shadow:0px 0px 6px #0332fc;
 }
 
-
-
 .button:active{
 	background-image: -webkit-linear-gradient(top, #efedec, #f7f4f4);
 	background-image: linear-gradient(top, #efedec, #f7f4f4);
@@ -117,4 +115,28 @@ html, body{
 .button:active:after{
 	color:#dbd2d2;
 	text-shadow: 0px -1px 1px #bdb5b4, 0px 1px 1px white;
+}
+
+
+/* Main Styles */
+.testSocketButton {
+	padding: 10px 0 10px 10px;
+}
+
+#gamepadStart {
+	padding: 10px 0 10px 10px;
+}
+
+#gamepadDisplayData {
+	padding: 10px 0 60px 10px;
+}
+
+.browserStick1 {
+	float:left;
+	padding: 10px 50px 0 20px;
+}
+
+.browserStick2 {
+	float:left;
+	padding: 10px 0 0 50px;
 }

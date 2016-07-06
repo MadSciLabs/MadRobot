@@ -5,6 +5,10 @@ var socket = io();
 var hasGP = false;
 var repGP;
 
+// Initialize browser controllers
+var browserStickJSON = {"stick1" : 0, "stick2" : 0};
+var repBC;
+
 
 // On document load
 $(document).ready(function() {
@@ -20,6 +24,18 @@ $(document).ready(function() {
         "skin" : "tron"
     });
 
+    $('#button1, #button2, #button3, #button4').click(function () {
+
+        // Create object for keyboard data to JSON format
+        var browserButtonJSON = {};
+        browserButtonJSON[this.id] = 1;
+
+        // Send gamepad JSON socket data to server
+        socket.emit('gamepad', JSON.stringify(browserButtonJSON));
+    });
+
+    // Initiate browser controller listener
+    repBC = window.setInterval(reportOnBrowserControls,100);
 
 
     // Manage sockets
@@ -112,3 +128,23 @@ function reportOnGamepad() {
     socket.emit('gamepad', JSON.stringify(gamepadJSON));
 
 }
+
+// Return browser controller data
+function reportOnBrowserControls() {
+
+    // Check to see if any values have changed
+    if ($('#stick1').val() != browserStickJSON.stick1 || $('#stick2').val() != browserStickJSON.stick2){
+        
+        // Create object for keyboard data to JSON format
+        browserStickJSON = {};
+
+        browserStickJSON["stick1"] = $('#stick1').val();
+        browserStickJSON["stick2"] = $('#stick2').val();
+
+        // Send gamepad JSON socket data to server
+        socket.emit('gamepad', JSON.stringify(browserStickJSON));
+
+    }
+
+}
+

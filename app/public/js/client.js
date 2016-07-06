@@ -27,16 +27,17 @@ $(document).ready(function() {
 
     $('#button1, #button2, #button3, #button4').click(function () {
 
-        // Create object for keyboard data to JSON format
+        // Create object for browser button data to JSON format
         var browserButtonJSON = {};
         browserButtonJSON[this.id] = true;
 
-        // Send gamepad JSON socket data to server
+        // Send browser button JSON socket data to server
         socket.emit('gamepad', JSON.stringify(browserButtonJSON));
     });
 
     // Initiate browser controller listener
     repBC = window.setInterval(reportOnBrowserControls,100);
+
 
 
     // Manage sockets
@@ -50,6 +51,7 @@ $(document).ready(function() {
     $("#hello").click(function(){
         socket.emit('messageIn', { data: 'data 2', id: '2' });
     });
+
 
 
     // Manage gamepad
@@ -146,6 +148,10 @@ function reportOnGamepad() {
 
 }
 
+
+
+// Browser controller functions
+
 // Return browser controller data
 function reportOnBrowserControls() {
 
@@ -164,4 +170,3 @@ function reportOnBrowserControls() {
     }
 
 }
-

@@ -14,10 +14,21 @@ app.get('/', function(req, res) {
   res.sendfile('index.html');
 });
 
-// Alexa
-app.get('/user/:id', function(req, res) {
-  res.send('user' + req.params.id);    
+/**************
+// ALEXA
+**************/
+app.get('/alexa/:c', function(request, res) {
+
+	_action = request.params.c;
+
+	//SEND THE COMMAND
+	io.emit('alexa', _action);
+
+        console.log("alexa : " + _action);
+        res.setHeader('Content-Type', 'application/json');
+        res.send(JSON.stringify({status: "ok dc test"}));
 });
+
 
 /** END SET ROUTES **/
 
@@ -37,8 +48,15 @@ function sendTime() {
   io.emit('time', { time: new Date().toJSON() });
 }
 
+//Forward Gamepad messages to 
+function sendControl(_var, _val) {
+
+  console.log("Send Control")
+  io.emit(_var, _val);
+}
+
 // Send current time every 10 secs
-setInterval(sendTime, 10000);
+//setInterval(sendTime, 10000);
 
 // Emit welcome message on connection
 io.on('connection', function(socket) {
@@ -55,6 +73,15 @@ io.on('connection', function(socket) {
     socket.on('gamepad', function(data) {
       console.log('gamepad');
       console.log(data);
+
+	_data = JSON.parse(data);
+
+      for (var an in _data) {
+	console.log(an + " " + _data[an]);
+        sendControl(an, _data[an]);
+      }
+
+      //Send control to python script
     });
 
 });

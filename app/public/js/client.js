@@ -10,6 +10,9 @@ var repGP;
 var browserStickJSON = {};
 var repBC;
 
+// Create object for keyboard data to JSON format
+var browserStickJSON1 = {};
+var browserStickJSON2 = {};
 
 // On document load
 $(document).ready(function() {
@@ -17,7 +20,7 @@ $(document).ready(function() {
     // Setup input controls in case there is no gamepad
     $(".dial").knob({
         "min" : 0,
-        "max" : 1023,
+        "max" : 255,
         "width" : "150",
         "cursor" : true,
         "thickness" : .3,
@@ -25,7 +28,7 @@ $(document).ready(function() {
         "skin" : "tron"
     });
 
-    $('#button1, #button2, #button3, #button4').click(function () {
+    $('#buttonTrayUp, #buttonTrayDown, #buttonUp, #buttonDown, #buttonLeft, #buttonRight').click(function () {
 
         // Create object for keyboard data to JSON format
         var browserButtonJSON = {};
@@ -152,17 +155,23 @@ function reportOnGamepad() {
 function reportOnBrowserControls() {
 
     // Check to see if any values have changed - if not don't send JSON
-    if ($('#stick1').val() != browserStickJSON.stick1 || $('#stick2').val() != browserStickJSON.stick2){
-        
-        // Create object for keyboard data to JSON format
-        browserStickJSON = {};
+    if ($('#stick1').val() != browserStickJSON1.stick1 ){
 
-        browserStickJSON["stick1"] = $('#stick1').val();
-        browserStickJSON["stick2"] = $('#stick2').val();
+       
+        browserStickJSON1["stick1"] = $('#stick1').val();
 
         // Send gamepad JSON socket data to server
-        socket.emit('gamepad', JSON.stringify(browserStickJSON));
+        socket.emit('gamepad', JSON.stringify(browserStickJSON1));
+    }
+ 
+    if ($('#stick2').val() != browserStickJSON2.stick2){
 
+	console.log("stick2");
+
+        browserStickJSON2["stick2"] = $('#stick2').val();
+
+        // Send gamepad JSON socket data to server
+        socket.emit('gamepad', JSON.stringify(browserStickJSON2));
     }
 
 }
